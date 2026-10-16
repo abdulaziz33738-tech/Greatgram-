@@ -1,0 +1,51 @@
+name: Build GreatGram APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get project
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android tools
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-34" "platforms;android-35" "build-tools;34.0.0" "build-tools;35.0.0"
+
+      - name: Extract GreatGram project
+        run: |
+          mkdir project
+          unzip -q *.zip -d project
+
+      - name: Find and build APK
+        run: |
+          PROJECT_DIR=$(find project -name gradlew -type f -print -quit | xargs -r dirname)
+
+          if [ -z "$PROJECT_DIR" ]; then
+            echo "Could not find Android project"
+            exit 1
+          fi
+
+          echo "Project found at: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Save APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GreatGram-APK
+          path: project/**/build/outputs/apk/**/*.apk
