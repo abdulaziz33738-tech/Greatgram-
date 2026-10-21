@@ -32,7 +32,7 @@ jobs:
 
       - name: Build APK
         run: |
-          cd project/GreatGram-Android-Project
+          
           chmod +x gradlew
           ./gradlew assembleDebug
 
