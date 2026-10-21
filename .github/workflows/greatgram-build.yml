@@ -34,7 +34,8 @@ jobs:
         run: |
           
           
-          gradle assembleDebug
+          unzip -q "GreatGram-Android-Project (1).zip" -d project
+gradle -p "$(dirname "$(find project -name settings.gradle -print -quit)")" assembleDebug
 
       - name: Save APK
         uses: actions/upload-artifact@v4
