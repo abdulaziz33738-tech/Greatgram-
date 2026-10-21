@@ -34,7 +34,7 @@ jobs:
         run: |
           
           
-          gradle -p GreatGram-Android-Project assembleDebug
+          gradle assembleDebug
 
       - name: Save APK
         uses: actions/upload-artifact@v4
