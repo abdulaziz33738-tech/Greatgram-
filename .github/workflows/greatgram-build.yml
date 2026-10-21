@@ -42,16 +42,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Build APK with Gradle
-        run: |
-          # Find the actual extracted folder name inside 'project' and move into it if necessary
-          cd project/*
-          chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
-
-      - name: Upload Built APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: GreatGram-Release-APK
-          path: project/**/build/outputs/apk/**/*.apk
-          
+             - name: Build APK with Gradle
+      run: |
+        # Check where gradlew is located and navigate correctly
+        if [ -f "project/gradlew" ]; then
+          cd project
+        elif [ -f "gradlew" ]; then
+          echo "Root gradlew found"
+        else
+          # Find the actual extracted folder name if nested deeper
+          cd $(find project -maxdepth 2 -name "gradlew" -exec dirname {} \;)
+        fi
+        
+        chmod +x gradlew
+        ./gradlew assembleRelease --stacktrace
+        
