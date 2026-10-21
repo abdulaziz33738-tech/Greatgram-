@@ -29,7 +29,6 @@ jobs:
       - name: Extract GreatGram Project Source
         run: |
           mkdir -p project
-          # Assuming your zipped project file is in the root directory and named something like greatgram.zip or *.zip
           unzip -q "*.zip" -d project
 
       - name: Cache Gradle Dependencies
@@ -42,18 +41,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-             - name: Build APK with Gradle
-      run: |
-        # Check where gradlew is located and navigate correctly
-        if [ -f "project/gradlew" ]; then
-          cd project
-        elif [ -f "gradlew" ]; then
-          echo "Root gradlew found"
-        else
-          # Find the actual extracted folder name if nested deeper
-          cd $(find project -maxdepth 2 -name "gradlew" -exec dirname {} \;)
-        fi
-        
-        chmod +x gradlew
-        ./gradlew assembleRelease --stacktrace
-        
+      - name: Build APK with Gradle
+        run: |
+          # Check where gradlew is located and navigate correctly
+          if [ -f "project/gradlew" ]; then
+            cd project
+          elif [ -f "gradlew" ]; then
+            echo "Root gradlew found"
+          else
+            cd $(find project -maxdepth 2 -name "gradlew" -exec dirname {} \;)
+          fi
+          
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
+          
