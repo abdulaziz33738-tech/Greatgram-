@@ -32,8 +32,9 @@ jobs:
 
       - name: Build APK
         run: |
-          cd project
-          gradle assembleDebug
+          cd project/GreatGram-Android-Project
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Save APK
         uses: actions/upload-artifact@v4
