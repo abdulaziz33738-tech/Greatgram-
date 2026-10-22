@@ -40,7 +40,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('project/**/*.gradle*', 'project/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -51,8 +50,8 @@ jobs:
           PROJECT_DIR=$(find project -name settings.gradle -type f -print -quit | xargs -r dirname)
           echo "Project directory: $PROJECT_DIR"
           cd $PROJECT_DIR
-          chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
+          gradle assembleRelease --stacktrace
+          
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
