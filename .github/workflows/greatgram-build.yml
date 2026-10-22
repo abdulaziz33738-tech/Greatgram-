@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build Android APK
-    runs-on: ubuntu-latest
+    build:
+      name: Build Android APK
+      runs-on: ubuntu-latest
 
-    steps:
+      steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -19,12 +19,12 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK Packages
         run: |
           sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Extract GreatGram Project Source
         run: |
@@ -40,6 +40,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('project/**/*.gradle*', 'project/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -51,7 +52,6 @@ jobs:
           echo "Project directory: $PROJECT_DIR"
           cd $PROJECT_DIR
           gradle assembleRelease --stacktrace
-          
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
