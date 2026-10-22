@@ -50,10 +50,13 @@ jobs:
         run: |
           PROJECT_DIR=$(find project -name settings.gradle -type f -print -quit | xargs -r dirname)
           echo "Project directory: $PROJECT_DIR"
-          gradle -p "$PROJECT_DIR" assembleRelease --stacktrace
+          cd $PROJECT_DIR
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GreatGram-APK
           path: '**/build/outputs/apk/release/*.apk'
+          
